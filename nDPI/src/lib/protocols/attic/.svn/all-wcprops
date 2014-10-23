@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/ntop/!svn/ver/7372/trunk/nDPI/src/lib/protocols/attic
+END
+manolito.c
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/ntop/!svn/ver/7369/trunk/nDPI/src/lib/protocols/attic/manolito.c
+END
+ftp.c
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/ntop/!svn/ver/7372/trunk/nDPI/src/lib/protocols/attic/ftp.c
+END
+secondlife.c
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/ntop/!svn/ver/6081/trunk/nDPI/src/lib/protocols/attic/secondlife.c
+END
+flash.c
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/ntop/!svn/ver/7372/trunk/nDPI/src/lib/protocols/attic/flash.c
+END
+popo.c
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/ntop/!svn/ver/7354/trunk/nDPI/src/lib/protocols/attic/popo.c
+END

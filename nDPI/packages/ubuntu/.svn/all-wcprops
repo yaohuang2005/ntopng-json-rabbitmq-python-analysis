@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/ntop/!svn/ver/8219/trunk/nDPI/packages/ubuntu
+END
+configure
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/ntop/!svn/ver/8219/trunk/nDPI/packages/ubuntu/configure
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/ntop/!svn/ver/8219/trunk/nDPI/packages/ubuntu/Makefile.in
+END
+configure.in
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/ntop/!svn/ver/8219/trunk/nDPI/packages/ubuntu/configure.in
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/ntop/!svn/ver/8219/trunk/nDPI/packages/ubuntu/Makefile
+END

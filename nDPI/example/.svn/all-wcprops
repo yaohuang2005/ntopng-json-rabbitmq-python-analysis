@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/ntop/!svn/ver/8459/trunk/nDPI/example
+END
+protos.txt
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/ntop/!svn/ver/6027/trunk/nDPI/example/protos.txt
+END
+Makefile.am
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/ntop/!svn/ver/8170/trunk/nDPI/example/Makefile.am
+END
+ndpiReader.c
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/ntop/!svn/ver/8459/trunk/nDPI/example/ndpiReader.c
+END

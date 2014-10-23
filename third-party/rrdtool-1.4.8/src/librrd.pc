@@ -1,0 +1,10 @@
+prefix=/opt/rrdtool-1.4.8
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: librrd
+Description: Library for the RRDtool
+Version: 1.4.8
+Libs: -L${libdir} -lrrd
+Cflags: -I${includedir}

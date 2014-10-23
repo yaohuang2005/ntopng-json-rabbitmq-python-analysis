@@ -1,0 +1,89 @@
+Summary: Web-based traffic monitoring
+Name: ntopng
+Version: 1.2.2
+Release: 1.2.2
+License: GPL
+Group: Networking/Utilities
+URL: http://www.ntop.org/
+Source: ntopng-%{version}.tgz
+Packager: Luca Deri <deri@ntop.org>
+# Temporary location where the RPM will be built
+BuildRoot:  %{_tmppath}/%{name}-%{version}-root
+Requires: redis >= 2.4.0, GeoIP >= 1.4.8, rrdtool >= 1.3.8, numactl, libcurl
+
+%description
+Web-based traffic monitoring
+
+%prep
+
+%setup -q
+
+%build
+PATH=/usr/bin:/bin:/usr/sbin:/sbin
+CFLAGS="$RPM_OPT_FLAGS" ./configure
+make
+#
+
+# Installation may be a matter of running an install make target or you
+# may need to manually install files with the install command.
+%install
+PATH=/usr/bin:/bin:/usr/sbin:/sbin
+if [ -d $RPM_BUILD_ROOT ]; then
+	\rm -rf $RPM_BUILD_ROOT
+fi
+#
+# "T.J. Yang" <tjyang2001@gmail.com>
+#
+mkdir -p $RPM_BUILD_ROOT/etc/ntopng
+cat >$RPM_BUILD_ROOT/etc/ntopng/ntopng.conf.sample <<_EOT_
+-G=/var/tmp/ntopng.pid
+_EOT_
+cat >$RPM_BUILD_ROOT/etc/ntopng/ntopng.start <<_EOT_
+_EOT_
+
+mkdir -p $RPM_BUILD_ROOT/usr/bin $RPM_BUILD_ROOT/usr/share/ntopng $RPM_BUILD_ROOT/usr/share/man/man8 
+mkdir -p $RPM_BUILD_ROOT/etc/init.d
+cp $RPM_BUILD_DIR/ntopng-%{version}/ntopng $RPM_BUILD_ROOT/usr/bin
+cp $RPM_BUILD_DIR/ntopng-%{version}/ntopng.8 $RPM_BUILD_ROOT/usr/share/man/man8/ 
+cp -r $RPM_BUILD_DIR/ntopng-%{version}/httpdocs $RPM_BUILD_DIR/ntopng-%{version}/scripts $RPM_BUILD_ROOT/usr/share/ntopng
+#cp $RPM_BUILD_DIR/ntopng-%{version}/packages/etc/init/ntopng.conf $RPM_BUILD_ROOT/etc/init
+cp $RPM_BUILD_DIR/ntopng-%{version}/packages/etc/init.d/ntopng    $RPM_BUILD_ROOT/etc/init.d
+find $RPM_BUILD_ROOT -name ".svn" | xargs /bin/rm -rf
+find $RPM_BUILD_ROOT -name "*~"   | xargs /bin/rm -f
+#
+DST=$RPM_BUILD_ROOT/usr/ntopng
+SRC=$RPM_BUILD_DIR/%{name}-%{version}
+#mkdir -p $DST/conf
+# Clean out our build directory
+%clean
+rm -fr $RPM_BUILD_ROOT
+
+%files
+/usr/bin/ntopng
+/usr/share/man/man8/ntopng.8.gz
+#/etc/init/ntopng.conf
+/etc/init.d/ntopng
+/usr/share/ntopng
+/etc/ntopng/ntopng.conf.sample
+/etc/ntopng/ntopng.start
+
+# Set the default attributes of all of the files specified to have an
+# owner and group of root and to inherit the permissions of the file
+# itself.
+%defattr(-, root, root)
+
+%changelog
+* Sun Jun 30 2013 Luca Deri <deri@ntop.org> 1.0
+- Current package version
+
+%post
+echo 'Setting up redis auto startup'
+/sbin/chkconfig redis on
+echo 'Creating link under /usr/local/bin'
+if test ! -e /usr/local/bin/ntopng ; then ln -s /usr/bin/ntopng /usr/local/bin/ntopng ; fi
+/sbin/chkconfig --add ntopng
+
+%postun
+echo 'Removing /usr/local/bin/ntopng link'
+rm -f /usr/local/bin/ntopng > /dev/null 2>&1
+

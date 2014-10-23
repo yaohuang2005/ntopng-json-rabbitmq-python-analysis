@@ -1,0 +1,223 @@
+#! /bin/bash
+#
+# (C) 2003-13 - ntop.org
+#
+# chkconfig: 2345 80 30
+#
+### BEGIN INIT INFO
+# Provides:          ntopng
+# Required-Start:    $local_fs $remote_fs $network $syslog $pf_ring
+# Required-Stop:     $local_fs $remote_fs $network $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start/stop ntopng web
+### END INIT INFO
+
+if [ -f /lib/lsb/init-functions ]; then
+   DISTRO="debian"
+   . /lib/lsb/init-functions
+fi
+if [ -f /etc/init.d/functions ]; then
+   DISTRO="centos"
+   . /etc/init.d/functions
+fi
+
+ERROR=0
+NTOPNG_BINARY=/usr/bin/ntopng
+
+error_handler() {
+   if [ ${ERROR} -gt 0 ]; then
+      if [ ${DISTRO} == "debian" ]; then
+         log_failure_msg "${MSG}"
+         log_end_msg $ERROR
+         exit 99
+      elif [ ${DISTRO} == "centos" ]; then
+         echo -n ${MSG}
+         echo_failure; echo
+         exit 99
+      fi
+   fi
+}
+
+check_ntopng() {
+   # check the module status
+   RETVAL=0
+   PID_FILE=""
+
+   [ -f "/etc/ntopng/ntopng.conf" ] && PID_FILE=$(cat /etc/ntopng/ntopng.conf | grep '\-G='|cut -d '=' -f 2)
+   IS_EXISTING=0
+   if [ -f "/etc/ntopng/ntopng.conf" ] && [ -f $PID_FILE ]; then
+       PID=$(cat $PID_FILE)
+       if [ $PID -gt 0 ]; then
+          IS_EXISTING=$(ps auxw | grep -w $PID | wc -l)
+       fi
+   fi
+
+   if [ $1 == "start" ] && [ ${IS_EXISTING}  -gt 0 ]; then
+       MSG="ntopng already running. Exiting"
+       ERROR=1
+       RETVAL=1
+   elif [ $1 == "stop" ] && [ ${IS_EXISTING} -le 0 ]; then
+       MSG="ntopng not running. Exiting"
+       ERROR=0
+       [ ${DISTRO} == "debian" ] && log_end_msg $ERROR
+       [ ${DISTRO} == "centos" ] && echo_success && echo
+       exit 0
+   fi
+
+   error_handler
+}
+
+start_ntopng() {
+   RETVAL=0
+    FORCE=$1
+
+    if [ ! -d "/etc/ntopng" ]; then
+	echo "Configuration directory /etc/ntopng does not exist: quitting..."
+	echo "This package is designed to be used from within the nBox package that"
+	echo "configures ntopng using a web GUI. Please install the nBox package"
+	echo "from http://packages.ntop.org"
+        MSG="Default directory is missing. Exiting"
+        ERROR=1
+        RETVAL=1
+	error_handler
+    fi
+
+    if [ ! -f "/etc/ntopng/ntopng.conf" ]; then
+        MSG="Default configuration file is missing /etc/ntopng/ntopng.conf. Exiting"
+        ERROR=1
+        RETVAL=1
+	error_handler
+    fi
+
+    if [ -f /etc/ntopng/ntopng.start ] || [ $FORCE -eq 1 ]; then
+	[ ${DISTRO} == "debian" ] && log_daemon_msg "Starting ntopng"
+	[ ${DISTRO} == "centos" ] && echo -n "Starting ntopng: "
+
+	check_ntopng start
+	$NTOPNG_BINARY /etc/ntopng/ntopng.conf > /dev/null &
+    else
+        MSG="Missing /etc/ntopng/ntopng.start. Exiting"
+        ERROR=1
+        RETVAL=1
+	error_handler
+    fi
+    [ ${DISTRO} == "debian" ] && log_end_msg $ERROR
+    [ ${DISTRO} == "centos" ] && echo_success && echo
+}
+
+stop_ntopng() {
+    RETVAL=0
+    [ ${DISTRO} == "debian" ] && log_daemon_msg "Stopping ntopng"
+    [ ${DISTRO} == "centos" ] && echo -n "Stopping ntopng: "
+
+    check_ntopng stop
+
+    if [ ! -d "/etc/ntopng" ]; then
+        MSG="Default directory is missing. Exiting"
+        error_handler
+    	[ ${DISTRO} == "debian" ] && log_end_msg $ERROR
+    	[ ${DISTRO} == "centos" ] && echo_success && echo
+	return 0
+    fi
+
+    if [ -f /etc/ntopng/ntopng.conf ]; then
+	PID_FILE=$(cat /etc/ntopng/ntopng.conf | grep '\-G='|cut -d '=' -f 2)
+	if [ -f $PID_FILE ]; then
+	    PID=$(cat $PID_FILE)
+	    if [ $PID -gt 0 ]; then
+		kill -15 $PID > /dev/null
+		/bin/rm $PID_FILE
+	    else
+	           MSG="Unable to stop ntopng: invalid pid [$PID][$PID_FILE]"
+	           [ ${DISTRO} == "debian" ] && log_failure_msg "$MSG"
+	           [ ${DISTRO} == "centos" ] && echo_failure
+	   	   ERROR=1
+                   RETVAL=1
+	    fi
+	else
+	    MSG="Unable to stop ntopng: missing pid $PID_FILE"
+            [ ${DISTRO} == "debian" ] && log_failure_msg "$MSG"
+            [ ${DISTRO} == "centos" ] && echo_failure
+            ERROR=1
+            RETVAL=1
+	fi
+    else
+        MSG="ntopng can't be stopped: missing /etc/ntopng/ntopng.conf"
+        [ ${DISTRO} == "debian" ] && log_failure_msg "$MSG"
+        [ ${DISTRO} == "centos" ] && echo_failure
+        ERROR=1
+        RETVAL=1
+    fi
+    error_handler
+    [ ${DISTRO} == "debian" ] && log_end_msg $ERROR
+    [ ${DISTRO} == "centos" ] && echo_success && echo
+}
+
+status_ntopng() {
+    if [ ! -d "/etc/ntopng" ]; then
+        MSG="Default directory is missing. Exiting"
+        ERROR=1
+        RETVAL=1
+        error_handler
+    fi
+
+    if [ ! -f "/etc/ntopng/ntopng.conf" ]; then
+        MSG="Configuration file is missing. Exiting"
+        ERROR=1
+        RETVAL=1
+        error_handler
+    fi
+
+    PID_FILE=$(cat /etc/ntopng/ntopng.conf | grep '\-G='|cut -d '=' -f 2)
+    if [ -f $PID_FILE ]; then
+	PID=$(cat $PID_FILE)
+	if [ $PID -gt 0 ]; then
+	    echo "ntopng running as ${PID}"
+	else
+	    echo "No running ntopng pid [$PID] in [$PID_FILE]"
+	fi
+    fi
+    
+    return 0
+}
+
+
+########
+
+logger "ntopng $1"
+
+case "$1" in
+  start)
+	start_ntopng 0;
+	;;
+
+  force-start)	
+	if [ ! -f /etc/ntopng/ntopng.conf ]; then
+	    echo "ERROR: No configuration file found"
+	    exit 1
+	fi
+	start_ntopng 1;
+	;;
+
+  stop)
+       	stop_ntopng;
+	;;
+
+  status)
+	status_ntopng;
+	;;
+
+  restart)
+        stop_ntopng;
+	echo "Waiting ntopng to shutdown and flush data..."
+	sleep 10
+	start_ntopng 0;
+	;;
+
+  *)
+	echo "Usage: /etc/init.d/ntopng {start|force-start|stop|restart|status}]"
+	exit 1
+esac
+
+exit 0

@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/svn/ntop/!svn/ver/8459/trunk/nDPI
+END
+configure.ac
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/ntop/!svn/ver/8316/trunk/nDPI/configure.ac
+END
+INSTALL
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/ntop/!svn/ver/7819/trunk/nDPI/INSTALL
+END
+lib
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/svn/ntop/!svn/ver/8130/trunk/nDPI/lib
+END
+ChangeLog
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/ntop/!svn/ver/8033/trunk/nDPI/ChangeLog
+END
+libndpi.pc.in
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/ntop/!svn/ver/8071/trunk/nDPI/libndpi.pc.in
+END
+COPYING
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/ntop/!svn/ver/5152/trunk/nDPI/COPYING
+END
+libndpi.sym
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/ntop/!svn/ver/8170/trunk/nDPI/libndpi.sym
+END
+Makefile.am
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/ntop/!svn/ver/8193/trunk/nDPI/Makefile.am
+END
+autogen.sh
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/ntop/!svn/ver/8194/trunk/nDPI/autogen.sh
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svn/ntop/!svn/ver/8196/trunk/nDPI/README
+END

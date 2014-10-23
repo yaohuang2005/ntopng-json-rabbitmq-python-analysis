@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/ntop/!svn/ver/8459/trunk/nDPI/src/lib
+END
+ndpi_main.c
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/ntop/!svn/ver/8459/trunk/nDPI/src/lib/ndpi_main.c
+END
+Makefile.am
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/ntop/!svn/ver/8236/trunk/nDPI/src/lib/Makefile.am
+END
+ndpi_content_match.c.inc
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/ntop/!svn/ver/8033/trunk/nDPI/src/lib/ndpi_content_match.c.inc
+END
